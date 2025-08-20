@@ -1,0 +1,3 @@
+linkedin-jobs-scraper
+beautifulsoup4
+requests
