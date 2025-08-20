@@ -5,17 +5,30 @@ on:
     - cron: '0 3 * * *' # 3 AM UTC = 9 AM IST
   workflow_dispatch:
 
+
 jobs:
   run-scraper:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
+          
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+          python -m pip install --upgrade pip
+          
+          # Install core packages first
+          pip install beautifulsoup4==4.12.2
+          pip install requests==2.31.0
+          pip install lxml==4.9.3
+          
+          # Try different LinkedIn scraping packages
+          pip install linkedin-scraper || pip install linkedin-jobs-scraper || echo "LinkedIn package installation failed, continuing..."
+          
       - name: Run scraper
         env:
           YOUR_EMAIL: ${{ secrets.YOUR_EMAIL }}
