@@ -21,7 +21,8 @@ def send_email(subject, body):
     msg = MIMEMultipart("alternative")
     msg["Subject"] = subject
     msg["From"] = YOUR_EMAIL
-    msg["To"] = ", ".join(RECEIVER_EMAILS)
+    # Don't set "To" field - this hides recipients from each other
+    # msg["To"] = ", ".join(RECEIVER_EMAILS)  # Commented out to hide recipients
 
     msg.attach(MIMEText(body, "html"))
 
@@ -29,8 +30,9 @@ def send_email(subject, body):
         with smtplib.SMTP("smtp.gmail.com", 587) as server:
             server.starttls()
             server.login(YOUR_EMAIL, YOUR_APP_PASSWORD)
+            # Send to each recipient individually using BCC
             server.sendmail(YOUR_EMAIL, RECEIVER_EMAILS, msg.as_string())
-        print(f"✅ Email sent successfully to: {', '.join(RECEIVER_EMAILS)}")
+        print(f"✅ Email sent successfully to: {len(RECEIVER_EMAILS)} recipients (hidden from each other)")
     except Exception as e:
         print(f"❌ Failed to send email: {e}")
 
@@ -849,8 +851,7 @@ def main():
             <div class="jobs-container" style="padding: 20px;">
                 {''.join(job_rows)}
             </div>
-            
-         
+  
             
             <!-- Footer Tips -->
             <div class="tips-section" style="background-color: #E8F6FF; padding: 25px; margin: 20px;">
