@@ -2,7 +2,7 @@ name: Daily Internship Scraper
 
 on:
   schedule:
-    - cron: '0 3 * * *' # 3 AM UTC = 9 AM IST
+    - cron: '25 4 * * *'  # 9:55 AM IST
   workflow_dispatch:
 
 

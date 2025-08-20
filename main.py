@@ -702,18 +702,18 @@ def main():
                 </div>
             </div>
             
-            <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px; font-size: 14px; color: #566573;">
-                <div style="flex: 1; min-width: 150px;">
+            <div style="display: block; margin-bottom: 15px; font-size: 14px; color: #566573;">
+                <div style="margin-bottom: 10px; word-wrap: break-word; overflow-wrap: break-word;">
                     <span style="font-weight: 600;">📍 Location:</span><br>
-                    <span style="margin-left: 5px;">{job['location']}</span>
+                    <span style="margin-left: 5px; display: block; margin-top: 2px;">{job['location']}</span>
                 </div>
-                <div style="flex: 1; min-width: 120px;">
+                <div style="margin-bottom: 10px; word-wrap: break-word; overflow-wrap: break-word;">
                     <span style="font-weight: 600;">💰 Stipend:</span><br>
-                    <span style="margin-left: 5px; color: #27AE60;">{job['salary']}</span>
+                    <span style="margin-left: 5px; color: #27AE60; display: block; margin-top: 2px;">{job['salary']}</span>
                 </div>
-                <div style="flex: 1; min-width: 100px;">
+                <div style="margin-bottom: 10px; word-wrap: break-word; overflow-wrap: break-word;">
                     <span style="font-weight: 600;">📅 Posted:</span><br>
-                    <span style="margin-left: 5px;">{job['date']}</span>
+                    <span style="margin-left: 5px; display: block; margin-top: 2px;">{job['date']}</span>
                 </div>
             </div>
             
@@ -846,7 +846,7 @@ def main():
             </div>
             
             <!-- Jobs Container - Mobile Responsive Cards -->
-            <div style="padding: 20px;">
+            <div class="jobs-container" style="padding: 20px;">
                 {''.join(job_rows)}
             </div>
             
