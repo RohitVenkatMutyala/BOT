@@ -9,6 +9,7 @@ from datetime import datetime
 import time
 import random
 import re
+from urllib.parse import urlencode, quote_plus
 
 # ----- Config from Environment Variables -----
 YOUR_EMAIL = os.environ.get("YOUR_EMAIL")
@@ -32,6 +33,225 @@ def send_email(subject, body):
         print(f"✅ Email sent successfully to: {', '.join(RECEIVER_EMAILS)}")
     except Exception as e:
         print(f"❌ Failed to send email: {e}")
+
+# ----- Scrape LinkedIn Jobs -----
+def scrape_linkedin():
+    print("🔍 Scraping LinkedIn for internships...")
+    internships = []
+    
+    # LinkedIn headers to mimic browser behavior
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.9',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Connection': 'keep-alive',
+        'Upgrade-Insecure-Requests': '1',
+        'Sec-Fetch-Dest': 'document',
+        'Sec-Fetch-Mode': 'navigate',
+        'Sec-Fetch-Site': 'none',
+        'Cache-Control': 'max-age=0',
+    }
+    
+    # Session for maintaining cookies
+    session = requests.Session()
+    session.headers.update(headers)
+    
+    # Keywords for internship search
+    keywords = [
+        "Software Engineer Intern", "Data Science Intern", "Machine Learning Intern",
+        "Software Development Intern", "Python Developer Intern", "Full Stack Intern",
+        "Backend Developer Intern", "Frontend Developer Intern", "AI Intern",
+        "Web Developer Intern", "Mobile App Developer Intern", "DevOps Intern"
+    ]
+    
+    # Indian locations
+    locations = [
+        "India", "Bangalore, India", "Mumbai, India", "Delhi, India", 
+        "Hyderabad, India", "Chennai, India", "Pune, India"
+    ]
+    
+    try:
+        for keyword in keywords[:6]:  # Limit keywords to avoid rate limiting
+            for location in locations[:4]:  # Limit locations
+                try:
+                    print(f"📍 Searching LinkedIn: {keyword} in {location}")
+                    
+                    # Build LinkedIn job search URL
+                    search_params = {
+                        'keywords': keyword,
+                        'location': location,
+                        'f_TPR': 'r86400',  # Posted in last 24 hours
+                        'f_E': '1',  # Experience level: Internship
+                        'f_JT': 'I',  # Job type: Internship
+                        'sortBy': 'DD',  # Sort by date
+                        'start': 0
+                    }
+                    
+                    base_url = "https://www.linkedin.com/jobs/search"
+                    url = f"{base_url}?{urlencode(search_params)}"
+                    
+                    # Add random delay to avoid rate limiting
+                    time.sleep(random.uniform(3, 6))
+                    
+                    response = session.get(url, timeout=20)
+                    
+                    if response.status_code == 999:
+                        print("⚠️ LinkedIn is blocking requests (999 status). Trying alternative approach...")
+                        # Try with simplified URL
+                        simple_url = f"https://www.linkedin.com/jobs/search?keywords={quote_plus(keyword)}&location={quote_plus(location)}&f_JT=I"
+                        time.sleep(random.uniform(5, 8))
+                        response = session.get(simple_url, timeout=20)
+                    
+                    if response.status_code != 200:
+                        print(f"⚠️ LinkedIn returned status {response.status_code} for {keyword} in {location}")
+                        continue
+                    
+                    soup = BeautifulSoup(response.text, "html.parser")
+                    
+                    # Multiple selector strategies for LinkedIn job cards
+                    job_cards = (
+                        soup.find_all("div", class_="base-card relative w-full hover:no-underline focus:no-underline base-card--link base-search-card base-search-card--link job-search-card") or
+                        soup.find_all("div", class_="job-search-card") or
+                        soup.find_all("div", attrs={"data-entity-urn": True}) or
+                        soup.find_all("li", class_="result-card job-result-card result-card--with-hover-state") or
+                        soup.find_all("div", class_="base-search-card__info")
+                    )
+                    
+                    print(f"Found {len(job_cards)} job cards for {keyword} in {location}")
+                    
+                    for job in job_cards[:8]:  # Limit per search
+                        try:
+                            # Extract job title with multiple selectors
+                            title_element = (
+                                job.find("h3", class_="base-search-card__title") or
+                                job.find("a", class_="base-card__full-link") or
+                                job.find("h4", class_="base-search-card__title") or
+                                job.find("span", attrs={"aria-hidden": "true"}) or
+                                job.find("a", attrs={"data-tracking-control-name": "public_jobs_jserp-result_search-card"})
+                            )
+                            
+                            # Extract company with multiple selectors
+                            company_element = (
+                                job.find("h4", class_="base-search-card__subtitle") or
+                                job.find("a", class_="hidden-nested-link") or
+                                job.find("span", class_="job-search-card__subtitle-link") or
+                                job.find("h4", class_="base-search-card__subtitle-link")
+                            )
+                            
+                            # Extract location
+                            location_element = (
+                                job.find("span", class_="job-search-card__location") or
+                                job.find("span", class_="base-search-card__metadata") or
+                                job.find("div", class_="base-search-card__metadata")
+                            )
+                            
+                            # Extract job link
+                            link_element = (
+                                job.find("a", class_="base-card__full-link") or
+                                job.find("a", attrs={"data-tracking-control-name": "public_jobs_jserp-result_search-card"}) or
+                                title_element.find("a") if title_element else None
+                            )
+                            
+                            # Extract posting date
+                            date_element = (
+                                job.find("time", class_="job-search-card__listdate") or
+                                job.find("time", class_="job-search-card__listdate--new") or
+                                job.find("span", class_="job-search-card__listdate")
+                            )
+
+                            if title_element:
+                                # Clean up title
+                                if hasattr(title_element, 'get_text'):
+                                    title = title_element.get_text(strip=True)
+                                elif title_element.find('span'):
+                                    title = title_element.find('span').get_text(strip=True)
+                                else:
+                                    title = str(title_element.get('title', '')).strip()
+                                
+                                # Skip if title is empty or too generic
+                                if not title or len(title) < 5:
+                                    continue
+                                
+                                # Extract company name
+                                if company_element:
+                                    if hasattr(company_element, 'get_text'):
+                                        company = company_element.get_text(strip=True)
+                                    else:
+                                        company = str(company_element).strip()
+                                else:
+                                    company = "Company Not Listed"
+                                
+                                # Extract location
+                                if location_element:
+                                    job_location = location_element.get_text(strip=True)
+                                    # Clean up location text
+                                    job_location = re.sub(r'\s+', ' ', job_location)
+                                else:
+                                    job_location = location
+                                
+                                # Build proper LinkedIn job URL
+                                if link_element and link_element.get('href'):
+                                    href = link_element.get('href')
+                                    if href.startswith('/'):
+                                        job_link = f"https://www.linkedin.com{href}"
+                                    else:
+                                        job_link = href
+                                    
+                                    # Clean LinkedIn tracking parameters
+                                    if '?' in job_link:
+                                        job_link = job_link.split('?')[0]
+                                else:
+                                    job_link = url  # Fallback to search URL
+                                
+                                # Extract posting date
+                                posting_date = datetime.now().strftime('%Y-%m-%d')
+                                if date_element:
+                                    date_text = date_element.get_text(strip=True)
+                                    # Parse relative dates like "2 days ago", "1 week ago"
+                                    if 'day' in date_text.lower():
+                                        posting_date = datetime.now().strftime('%Y-%m-%d')
+                                    elif 'week' in date_text.lower():
+                                        posting_date = datetime.now().strftime('%Y-%m-%d')
+                                
+                                # Only add if title contains internship-related keywords
+                                internship_keywords = ['intern', 'internship', 'trainee', 'graduate program', 'entry level', 'fresher']
+                                if any(word in title.lower() for word in internship_keywords):
+                                    internships.append({
+                                        "title": title,
+                                        "company": company,
+                                        "location": job_location,
+                                        "salary": "Not Mentioned",  # LinkedIn rarely shows salary publicly
+                                        "link": job_link,
+                                        "source": "LinkedIn",
+                                        "date": posting_date
+                                    })
+                                    print(f"✅ Added LinkedIn: {title} at {company}")
+                                
+                        except Exception as e:
+                            print(f"⚠️ Error parsing LinkedIn job: {e}")
+                            continue
+                            
+                except Exception as e:
+                    print(f"❌ Error scraping LinkedIn for {keyword} in {location}: {e}")
+                    # Add longer delay if we hit an error (might be rate limited)
+                    time.sleep(random.uniform(5, 10))
+                    continue
+
+    except Exception as e:
+        print(f"❌ Major error scraping LinkedIn: {e}")
+    
+    # Remove duplicates based on title and company
+    unique_internships = []
+    seen = set()
+    for internship in internships:
+        key = (internship['title'].lower(), internship['company'].lower())
+        if key not in seen:
+            seen.add(key)
+            unique_internships.append(internship)
+    
+    print(f"✅ Found {len(unique_internships)} unique internships from LinkedIn")
+    return unique_internships
 
 # ----- Scrape Indeed India Internships -----
 def scrape_indeed():
@@ -413,8 +633,9 @@ def main():
     
     all_jobs = []
     
-    # Scrape from multiple sources
+    # Scrape from multiple sources including LinkedIn
     sources = [
+        ("LinkedIn", scrape_linkedin),
         ("Indeed India", scrape_indeed),
         ("Internshala", scrape_internshala),
         ("Naukri", scrape_naukri)
@@ -446,9 +667,9 @@ def main():
             unique_jobs.append(job)
     
     # Sort by source priority and limit results
-    priority_order = {"Indeed India": 1, "Internshala": 2, "Naukri.com": 3, "Sample Data": 4}
-    unique_jobs.sort(key=lambda x: priority_order.get(x['source'], 5))
-    final_jobs = unique_jobs[:30]  # Limit to 30 jobs for email
+    priority_order = {"LinkedIn": 1, "Indeed India": 2, "Internshala": 3, "Naukri.com": 4, "Sample Data": 5}
+    unique_jobs.sort(key=lambda x: priority_order.get(x['source'], 6))
+    final_jobs = unique_jobs[:35]  # Increased limit to accommodate LinkedIn jobs
 
     print(f"\n📊 Final Summary:")
     print(f"Total jobs scraped: {len(all_jobs)}")
@@ -458,9 +679,20 @@ def main():
     # Create email content
     job_rows = []
     for job in final_jobs:
+        # Add source badge styling
+        source_color = {
+            "LinkedIn": "#0077B5",
+            "Indeed India": "#2557A7", 
+            "Internshala": "#00A5EC",
+            "Naukri.com": "#7B68EE",
+            "Sample Data": "#95A5A6"
+        }
+        
+        source_badge = f'<span style="background-color: {source_color.get(job["source"], "#95A5A6")}; color: white; padding: 2px 8px; border-radius: 12px; font-size: 10px; margin-left: 8px;">{job["source"]}</span>'
+        
         job_row = f"""
         <tr style="border-bottom: 1px solid #eee;">
-            <td style="padding: 12px; font-weight: bold; color: #2E86C1;">{job['title']}</td>
+            <td style="padding: 12px; font-weight: bold; color: #2E86C1;">{job['title']}{source_badge}</td>
             <td style="padding: 12px;">{job['company']}</td>
             <td style="padding: 12px;">{job['location']}</td>
             <td style="padding: 12px;">{job['date']}</td>
@@ -486,6 +718,9 @@ def main():
             <div style="background: linear-gradient(135deg, #2E86C1, #3498DB); color: white; padding: 30px; text-align: center;">
                 <h1 style="margin: 0; font-size: 28px; font-weight: 300;">🇮🇳 India Internships Daily Digest</h1>
                 <p style="margin: 10px 0 0 0; opacity: 0.9; font-size: 16px;">📅 {datetime.now().strftime('%B %d, %Y')} | {len(final_jobs)} Fresh Opportunities</p>
+                <div style="margin-top: 15px;">
+                    <span style="background-color: rgba(255,255,255,0.2); padding: 5px 15px; border-radius: 20px; font-size: 12px;">✨ Now including LinkedIn Jobs!</span>
+                </div>
             </div>
             
             <!-- Summary Stats -->
@@ -498,7 +733,7 @@ def main():
                 <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
                     <thead>
                         <tr style="background-color: #34495E; color: white;">
-                            <th style="padding: 15px; text-align: left; font-weight: 600;">Position</th>
+                            <th style="padding: 15px; text-align: left; font-weight: 600;">Position & Source</th>
                             <th style="padding: 15px; text-align: left; font-weight: 600;">Company</th>
                             <th style="padding: 15px; text-align: left; font-weight: 600;">Location</th>
                             <th style="padding: 15px; text-align: left; font-weight: 600;">Date</th>
@@ -512,30 +747,65 @@ def main():
                 </table>
             </div>
             
+            <!-- Platform Information -->
+            <div style="background-color: #F8F9FA; padding: 25px; margin: 20px;">
+                <h3 style="color: #2E86C1; margin: 0 0 15px 0; font-size: 18px;">🌐 Sources & Platforms</h3>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                    <div style="background-color: #0077B5; color: white; padding: 8px 12px; border-radius: 8px; font-size: 12px;">
+                        <strong>LinkedIn:</strong> Professional network with premium internships
+                    </div>
+                    <div style="background-color: #2557A7; color: white; padding: 8px 12px; border-radius: 8px; font-size: 12px;">
+                        <strong>Indeed India:</strong> Largest job portal in India
+                    </div>
+                    <div style="background-color: #00A5EC; color: white; padding: 8px 12px; border-radius: 8px; font-size: 12px;">
+                        <strong>Internshala:</strong> India's #1 internship platform
+                    </div>
+                    <div style="background-color: #7B68EE; color: white; padding: 8px 12px; border-radius: 8px; font-size: 12px;">
+                        <strong>Naukri.com:</strong> Leading Indian job site
+                    </div>
+                </div>
+            </div>
+            
             <!-- Footer Tips -->
             <div style="background-color: #E8F6FF; padding: 25px; margin: 20px;">
                 <h3 style="color: #2E86C1; margin: 0 0 15px 0; font-size: 18px;">💡 Application Tips</h3>
                 <ul style="color: #34495E; margin: 0; padding-left: 20px; line-height: 1.6;">
                     <li><strong>Apply Early:</strong> Most internships are filled within 48 hours of posting</li>
+                    <li><strong>LinkedIn Strategy:</strong> Connect with recruiters and company employees before applying</li>
                     <li><strong>Customize Resume:</strong> Tailor your resume for each specific role and company</li>
                     <li><strong>Follow Up:</strong> Send a polite follow-up email after 1 week if no response</li>
                     <li><strong>Research Company:</strong> Show genuine interest by mentioning company-specific details</li>
+                    <li><strong>Portfolio Ready:</strong> Have your GitHub, projects, and portfolio links ready</li>
+                </ul>
+            </div>
+            
+            <!-- LinkedIn Tips -->
+            <div style="background-color: #E8F4FD; padding: 25px; margin: 20px; border-left: 4px solid #0077B5;">
+                <h3 style="color: #0077B5; margin: 0 0 15px 0; font-size: 18px;">🔗 LinkedIn Pro Tips</h3>
+                <ul style="color: #34495E; margin: 0; padding-left: 20px; line-height: 1.6;">
+                    <li><strong>Optimize Profile:</strong> Use internship-relevant keywords in your headline and summary</li>
+                    <li><strong>Network Actively:</strong> Connect with alumni, professionals, and company employees</li>
+                    <li><strong>Engage Content:</strong> Like and comment on posts from companies you want to work for</li>
+                    <li><strong>Direct Messages:</strong> Send personalized messages to hiring managers (keep it brief!)</li>
                 </ul>
             </div>
             
             <!-- Footer -->
             <div style="text-align: center; padding: 25px; background-color: #2C3E50; color: white;">
                 <p style="margin: 0; font-size: 13px; opacity: 0.8;">
-                    🤖 Automated by GitHub Actions | Data from Indeed, Internshala & Naukri<br>
+                    🤖 Automated by GitHub Actions | Data from LinkedIn, Indeed, Internshala & Naukri<br>
                     💪 Best of luck with your applications! | Next update in 24 hours
                 </p>
+                <div style="margin-top: 10px;">
+                    <span style="background-color: rgba(255,255,255,0.1); padding: 3px 8px; border-radius: 10px; font-size: 11px;">Enhanced with LinkedIn Integration</span>
+                </div>
             </div>
         </div>
     </body>
     </html>
     """
 
-    send_email("🇮🇳 Daily India Internships - Latest Opportunities", email_content)
+    send_email("🇮🇳 Daily India Internships - Latest Opportunities (Now with LinkedIn!)", email_content)
     print("🎉 Email sent successfully! Process completed.")
 
 if __name__ == "__main__":
