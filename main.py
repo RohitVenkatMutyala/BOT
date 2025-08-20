@@ -9,7 +9,7 @@ from linkedin_jobs_scraper.query import Query, QueryOptions
 from bs4 import BeautifulSoup
 import requests
 
-# ----- Config from Environment Variables -----
+# ----- Configuration from Environment Variables -----
 YOUR_EMAIL = os.environ.get("YOUR_EMAIL")
 YOUR_APP_PASSWORD = os.environ.get("YOUR_APP_PASSWORD")
 RECEIVER_EMAILS = os.environ.get("RECEIVERS", "").split(",")
@@ -38,7 +38,7 @@ def scrape_linkedin():
     scraped_jobs = []
 
     def on_data(data: EventData):
-        if any(loc in data.place.lower() for loc in ["remote", "worldwide", "india"]):
+        if "remote" in data.place.lower() or "worldwide" in data.place.lower() or "india" in data.place.lower():
             job_info = f"""
             <tr>
                 <td><b>{data.title}</b></td>
