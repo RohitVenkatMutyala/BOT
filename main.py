@@ -692,12 +692,29 @@ def main():
         
         job_row = f"""
         <tr style="border-bottom: 1px solid #eee;">
-            <td style="padding: 12px; font-weight: bold; color: #2E86C1;">{job['title']}{source_badge}</td>
-            <td style="padding: 12px;">{job['company']}</td>
-            <td style="padding: 12px;">{job['location']}</td>
-            <td style="padding: 12px;">{job['date']}</td>
-            <td style="padding: 12px; color: #27AE60;">{job['salary']}</td>
-            <td style="padding: 12px;"><a href="{job['link']}" target="_blank" style="background-color: #2E86C1; color: white; padding: 8px 12px; text-decoration: none; border-radius: 4px; font-size: 12px;">Apply Now</a></td>
+            <td style="padding: 15px; font-weight: bold; color: #2E86C1; min-width: 200px;">{job['title']}{source_badge}</td>
+            <td style="padding: 15px; min-width: 150px;">{job['company']}</td>
+            <td style="padding: 15px; min-width: 120px;">{job['location']}</td>
+            <td style="padding: 15px; min-width: 80px; font-size: 12px;">{job['date']}</td>
+            <td style="padding: 15px; color: #27AE60; min-width: 100px; font-size: 13px;">{job['salary']}</td>
+            <td style="padding: 15px; text-align: center; min-width: 120px;">
+                <a href="{job['link']}" target="_blank" style="
+                    display: inline-block;
+                    background: linear-gradient(135deg, #3498DB, #2E86C1);
+                    color: white;
+                    padding: 10px 20px;
+                    text-decoration: none;
+                    border-radius: 25px;
+                    font-size: 13px;
+                    font-weight: 600;
+                    box-shadow: 0 2px 10px rgba(46, 134, 193, 0.3);
+                    transition: all 0.3s ease;
+                    white-space: nowrap;
+                " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 15px rgba(46, 134, 193, 0.4)';" 
+                   onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 10px rgba(46, 134, 193, 0.3)';">
+                    ✨ Apply Now
+                </a>
+            </td>
         </tr>
         """
         job_rows.append(job_row)
@@ -716,7 +733,7 @@ def main():
         <div style="max-width: 900px; margin: 0 auto; background-color: white; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); overflow: hidden;">
             <!-- Header -->
             <div style="background: linear-gradient(135deg, #2E86C1, #3498DB); color: white; padding: 30px; text-align: center;">
-                <h1 style="margin: 0; font-size: 28px; font-weight: 300;">🇮🇳 India Internships Daily Digest</h1>
+                <h1 style="margin: 0; font-size: 28px; font-weight: 300;">Internships Daily Digest</h1>
                 <p style="margin: 10px 0 0 0; opacity: 0.9; font-size: 16px;">📅 {datetime.now().strftime('%B %d, %Y')} | {len(final_jobs)} Fresh Opportunities</p>
                 <div style="margin-top: 15px;">
                     <span style="background-color: rgba(255,255,255,0.2); padding: 5px 15px; border-radius: 20px; font-size: 12px;">✨ Now including LinkedIn Jobs!</span>
@@ -730,15 +747,15 @@ def main():
             
             <!-- Jobs Table -->
             <div style="padding: 0; overflow-x: auto;">
-                <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 14px; min-width: 800px;">
                     <thead>
                         <tr style="background-color: #34495E; color: white;">
-                            <th style="padding: 15px; text-align: left; font-weight: 600;">Position & Source</th>
-                            <th style="padding: 15px; text-align: left; font-weight: 600;">Company</th>
-                            <th style="padding: 15px; text-align: left; font-weight: 600;">Location</th>
-                            <th style="padding: 15px; text-align: left; font-weight: 600;">Date</th>
-                            <th style="padding: 15px; text-align: left; font-weight: 600;">Stipend</th>
-                            <th style="padding: 15px; text-align: center; font-weight: 600;">Apply</th>
+                            <th style="padding: 18px 15px; text-align: left; font-weight: 600; min-width: 200px;">Position & Source</th>
+                            <th style="padding: 18px 15px; text-align: left; font-weight: 600; min-width: 150px;">Company</th>
+                            <th style="padding: 18px 15px; text-align: left; font-weight: 600; min-width: 120px;">Location</th>
+                            <th style="padding: 18px 15px; text-align: left; font-weight: 600; min-width: 80px;">Date</th>
+                            <th style="padding: 18px 15px; text-align: left; font-weight: 600; min-width: 100px;">Stipend</th>
+                            <th style="padding: 18px 15px; text-align: center; font-weight: 600; min-width: 120px;">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -750,17 +767,17 @@ def main():
             <!-- Platform Information -->
             <div style="background-color: #F8F9FA; padding: 25px; margin: 20px;">
                 <h3 style="color: #2E86C1; margin: 0 0 15px 0; font-size: 18px;">🌐 Sources & Platforms</h3>
-                <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-                    <div style="background-color: #0077B5; color: white; padding: 8px 12px; border-radius: 8px; font-size: 12px;">
+                <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: space-between;">
+                    <div style="background-color: #0077B5; color: white; padding: 12px 16px; border-radius: 8px; font-size: 12px; flex: 1; min-width: 200px; margin-bottom: 10px;">
                         <strong>LinkedIn:</strong> Professional network with premium internships
                     </div>
-                    <div style="background-color: #2557A7; color: white; padding: 8px 12px; border-radius: 8px; font-size: 12px;">
+                    <div style="background-color: #2557A7; color: white; padding: 12px 16px; border-radius: 8px; font-size: 12px; flex: 1; min-width: 200px; margin-bottom: 10px;">
                         <strong>Indeed India:</strong> Largest job portal in India
                     </div>
-                    <div style="background-color: #00A5EC; color: white; padding: 8px 12px; border-radius: 8px; font-size: 12px;">
+                    <div style="background-color: #00A5EC; color: white; padding: 12px 16px; border-radius: 8px; font-size: 12px; flex: 1; min-width: 200px; margin-bottom: 10px;">
                         <strong>Internshala:</strong> India's #1 internship platform
                     </div>
-                    <div style="background-color: #7B68EE; color: white; padding: 8px 12px; border-radius: 8px; font-size: 12px;">
+                    <div style="background-color: #7B68EE; color: white; padding: 12px 16px; border-radius: 8px; font-size: 12px; flex: 1; min-width: 200px; margin-bottom: 10px;">
                         <strong>Naukri.com:</strong> Leading Indian job site
                     </div>
                 </div>
@@ -793,11 +810,11 @@ def main():
             <!-- Footer -->
             <div style="text-align: center; padding: 25px; background-color: #2C3E50; color: white;">
                 <p style="margin: 0; font-size: 13px; opacity: 0.8;">
-                    🤖 Automated by GitHub Actions | Data from LinkedIn, Indeed, Internshala & Naukri<br>
+                    🤖 Automated by GitHub Actions <br>
                     💪 Best of luck with your applications! | Next update in 24 hours
                 </p>
                 <div style="margin-top: 10px;">
-                    <span style="background-color: rgba(255,255,255,0.1); padding: 3px 8px; border-radius: 10px; font-size: 11px;">Enhanced with LinkedIn Integration</span>
+                    <span style="background-color: rgba(255,255,255,0.1); padding: 3px 8px; border-radius: 10px; font-size: 11px;">Made With ❤️</span>
                 </div>
             </div>
         </div>
@@ -805,7 +822,7 @@ def main():
     </html>
     """
 
-    send_email("🇮🇳 Daily India Internships - Latest Opportunities (Now with LinkedIn!)", email_content)
+    send_email(" Daily Internships - Latest Opportunities ", email_content)
     print("🎉 Email sent successfully! Process completed.")
 
 if __name__ == "__main__":
