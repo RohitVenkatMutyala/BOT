@@ -850,24 +850,7 @@ def main():
                 {''.join(job_rows)}
             </div>
             
-            <!-- Platform Information -->
-            <div class="tips-section" style="background-color: #F8F9FA; padding: 25px; margin: 20px;">
-                <h3 style="color: #2E86C1; margin: 0 0 15px 0; font-size: 18px;">🌐 Sources & Platforms</h3>
-                <div class="platform-grid" style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: space-between;">
-                    <div class="platform-item" style="background-color: #0077B5; color: white; padding: 12px 16px; border-radius: 8px; font-size: 12px; flex: 1; min-width: 200px; margin-bottom: 10px;">
-                        <strong>LinkedIn:</strong> Professional network with premium internships
-                    </div>
-                    <div class="platform-item" style="background-color: #2557A7; color: white; padding: 12px 16px; border-radius: 8px; font-size: 12px; flex: 1; min-width: 200px; margin-bottom: 10px;">
-                        <strong>Indeed India:</strong> Largest job portal in India
-                    </div>
-                    <div class="platform-item" style="background-color: #00A5EC; color: white; padding: 12px 16px; border-radius: 8px; font-size: 12px; flex: 1; min-width: 200px; margin-bottom: 10px;">
-                        <strong>Internshala:</strong> India's #1 internship platform
-                    </div>
-                    <div class="platform-item" style="background-color: #7B68EE; color: white; padding: 12px 16px; border-radius: 8px; font-size: 12px; flex: 1; min-width: 200px; margin-bottom: 10px;">
-                        <strong>Naukri.com:</strong> Leading Indian job site
-                    </div>
-                </div>
-            </div>
+         
             
             <!-- Footer Tips -->
             <div class="tips-section" style="background-color: #E8F6FF; padding: 25px; margin: 20px;">
