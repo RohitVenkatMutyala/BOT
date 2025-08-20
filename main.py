@@ -20,7 +20,8 @@ RECEIVER_EMAILS = os.environ.get("RECEIVERS", "").split(",")
 def send_email(subject, body):
     msg = MIMEMultipart("alternative")
     msg["Subject"] = subject
-    msg["From"] = YOUR_EMAIL
+    # Set custom "From" email address as requested
+    msg["From"] = "rohith@randoman.online"
     # Don't set "To" field - this hides recipients from each other
     # msg["To"] = ", ".join(RECEIVER_EMAILS)  # Commented out to hide recipients
 
@@ -851,7 +852,7 @@ def main():
             <div class="jobs-container" style="padding: 20px;">
                 {''.join(job_rows)}
             </div>
-  
+       
             
             <!-- Footer Tips -->
             <div class="tips-section" style="background-color: #E8F6FF; padding: 25px; margin: 20px;">
