@@ -676,7 +676,7 @@ def main():
     print(f"Unique jobs after deduplication: {len(unique_jobs)}")
     print(f"Jobs to be sent in email: {len(final_jobs)}")
 
-    # Create email content
+    # Create mobile-responsive email content
     job_rows = []
     for job in final_jobs:
         # Add source badge styling
@@ -690,32 +690,51 @@ def main():
         
         source_badge = f'<span style="background-color: {source_color.get(job["source"], "#95A5A6")}; color: white; padding: 2px 8px; border-radius: 12px; font-size: 10px; margin-left: 8px;">{job["source"]}</span>'
         
+        # Mobile-responsive job card layout
         job_row = f"""
-        <tr style="border-bottom: 1px solid #eee;">
-            <td style="padding: 15px; font-weight: bold; color: #2E86C1; min-width: 200px;">{job['title']}{source_badge}</td>
-            <td style="padding: 15px; min-width: 150px;">{job['company']}</td>
-            <td style="padding: 15px; min-width: 120px;">{job['location']}</td>
-            <td style="padding: 15px; min-width: 80px; font-size: 12px;">{job['date']}</td>
-            <td style="padding: 15px; color: #27AE60; min-width: 100px; font-size: 13px;">{job['salary']}</td>
-            <td style="padding: 15px; text-align: center; min-width: 120px;">
+        <div style="background-color: #f8f9fa; margin-bottom: 20px; border-radius: 12px; padding: 20px; border-left: 4px solid {source_color.get(job["source"], "#95A5A6")}; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+            <div style="margin-bottom: 15px;">
+                <h3 style="margin: 0 0 8px 0; color: #2E86C1; font-size: 18px; line-height: 1.3; font-weight: 600;">
+                    {job['title']}{source_badge}
+                </h3>
+                <div style="color: #34495E; font-size: 16px; font-weight: 500; margin-bottom: 8px;">
+                    🏢 {job['company']}
+                </div>
+            </div>
+            
+            <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px; font-size: 14px; color: #566573;">
+                <div style="flex: 1; min-width: 150px;">
+                    <span style="font-weight: 600;">📍 Location:</span><br>
+                    <span style="margin-left: 5px;">{job['location']}</span>
+                </div>
+                <div style="flex: 1; min-width: 120px;">
+                    <span style="font-weight: 600;">💰 Stipend:</span><br>
+                    <span style="margin-left: 5px; color: #27AE60;">{job['salary']}</span>
+                </div>
+                <div style="flex: 1; min-width: 100px;">
+                    <span style="font-weight: 600;">📅 Posted:</span><br>
+                    <span style="margin-left: 5px;">{job['date']}</span>
+                </div>
+            </div>
+            
+            <div style="text-align: center;">
                 <a href="{job['link']}" target="_blank" style="
                     display: inline-block;
                     background: linear-gradient(135deg, #3498DB, #2E86C1);
                     color: white;
-                    padding: 10px 20px;
+                    padding: 12px 25px;
                     text-decoration: none;
                     border-radius: 25px;
-                    font-size: 13px;
+                    font-size: 14px;
                     font-weight: 600;
-                    box-shadow: 0 2px 10px rgba(46, 134, 193, 0.3);
+                    box-shadow: 0 3px 12px rgba(46, 134, 193, 0.3);
                     transition: all 0.3s ease;
-                    white-space: nowrap;
-                " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 15px rgba(46, 134, 193, 0.4)';" 
-                   onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 10px rgba(46, 134, 193, 0.3)';">
+                    min-width: 140px;
+                ">
                     ✨ Apply Now
                 </a>
-            </td>
-        </tr>
+            </div>
+        </div>
         """
         job_rows.append(job_row)
 
@@ -727,12 +746,93 @@ def main():
 
     source_summary = " | ".join([f"{source}: {count}" for source, count in source_counts.items()])
 
+    # Mobile-responsive email template
     email_content = f"""
-    <html>
-    <body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8f9fa; margin: 0; padding: 20px;">
-        <div style="max-width: 900px; margin: 0 auto; background-color: white; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); overflow: hidden;">
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Daily Internships</title>
+        <style>
+            /* Mobile-first responsive styles */
+            @media only screen and (max-width: 600px) {{
+                .container {{
+                    width: 100% !important;
+                    margin: 0 !important;
+                    padding: 10px !important;
+                }}
+                .header {{
+                    padding: 20px 15px !important;
+                }}
+                .header h1 {{
+                    font-size: 22px !important;
+                }}
+                .header p {{
+                    font-size: 14px !important;
+                }}
+                .job-card {{
+                    margin: 10px 0 !important;
+                    padding: 15px !important;
+                }}
+                .job-title {{
+                    font-size: 16px !important;
+                }}
+                .company-name {{
+                    font-size: 15px !important;
+                }}
+                .job-details {{
+                    flex-direction: column !important;
+                    gap: 10px !important;
+                }}
+                .job-detail-item {{
+                    min-width: auto !important;
+                    margin-bottom: 8px !important;
+                }}
+                .apply-button {{
+                    width: 100% !important;
+                    min-width: auto !important;
+                    padding: 15px 20px !important;
+                    font-size: 16px !important;
+                    box-sizing: border-box;
+                }}
+                .platform-grid {{
+                    flex-direction: column !important;
+                    gap: 10px !important;
+                }}
+                .platform-item {{
+                    flex: none !important;
+                    min-width: auto !important;
+                    margin-bottom: 5px !important;
+                }}
+                .tips-section {{
+                    padding: 20px 15px !important;
+                    margin: 10px !important;
+                }}
+                .tips-section h3 {{
+                    font-size: 16px !important;
+                }}
+                .tips-section ul {{
+                    padding-left: 15px !important;
+                }}
+                .tips-section li {{
+                    margin-bottom: 8px !important;
+                    font-size: 14px !important;
+                }}
+                .footer {{
+                    padding: 20px 15px !important;
+                }}
+                .summary-stats {{
+                    padding: 15px 10px !important;
+                    font-size: 12px !important;
+                }}
+            }}
+        </style>
+    </head>
+    <body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8f9fa; margin: 0; padding: 0;">
+        <div class="container" style="max-width: 900px; margin: 0 auto; background-color: white; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); overflow: hidden;">
             <!-- Header -->
-            <div style="background: linear-gradient(135deg, #2E86C1, #3498DB); color: white; padding: 30px; text-align: center;">
+            <div class="header" style="background: linear-gradient(135deg, #2E86C1, #3498DB); color: white; padding: 30px; text-align: center;">
                 <h1 style="margin: 0; font-size: 28px; font-weight: 300;">Internships Daily Digest</h1>
                 <p style="margin: 10px 0 0 0; opacity: 0.9; font-size: 16px;">📅 {datetime.now().strftime('%B %d, %Y')} | {len(final_jobs)} Fresh Opportunities</p>
                 <div style="margin-top: 15px;">
@@ -741,50 +841,36 @@ def main():
             </div>
             
             <!-- Summary Stats -->
-            <div style="padding: 20px; background-color: #ECF0F1; text-align: center;">
-                <p style="margin: 0; color: #34495E; font-size: 14px;">{source_summary}</p>
+            <div class="summary-stats" style="padding: 20px; background-color: #ECF0F1; text-align: center;">
+                <p style="margin: 0; color: #34495E; font-size: 14px; line-height: 1.4;">{source_summary}</p>
             </div>
             
-            <!-- Jobs Table -->
-            <div style="padding: 0; overflow-x: auto;">
-                <table style="width: 100%; border-collapse: collapse; font-size: 14px; min-width: 800px;">
-                    <thead>
-                        <tr style="background-color: #34495E; color: white;">
-                            <th style="padding: 18px 15px; text-align: left; font-weight: 600; min-width: 200px;">Position & Source</th>
-                            <th style="padding: 18px 15px; text-align: left; font-weight: 600; min-width: 150px;">Company</th>
-                            <th style="padding: 18px 15px; text-align: left; font-weight: 600; min-width: 120px;">Location</th>
-                            <th style="padding: 18px 15px; text-align: left; font-weight: 600; min-width: 80px;">Date</th>
-                            <th style="padding: 18px 15px; text-align: left; font-weight: 600; min-width: 100px;">Stipend</th>
-                            <th style="padding: 18px 15px; text-align: center; font-weight: 600; min-width: 120px;">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {''.join(job_rows)}
-                    </tbody>
-                </table>
+            <!-- Jobs Container - Mobile Responsive Cards -->
+            <div style="padding: 20px;">
+                {''.join(job_rows)}
             </div>
             
             <!-- Platform Information -->
-            <div style="background-color: #F8F9FA; padding: 25px; margin: 20px;">
+            <div class="tips-section" style="background-color: #F8F9FA; padding: 25px; margin: 20px;">
                 <h3 style="color: #2E86C1; margin: 0 0 15px 0; font-size: 18px;">🌐 Sources & Platforms</h3>
-                <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: space-between;">
-                    <div style="background-color: #0077B5; color: white; padding: 12px 16px; border-radius: 8px; font-size: 12px; flex: 1; min-width: 200px; margin-bottom: 10px;">
+                <div class="platform-grid" style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: space-between;">
+                    <div class="platform-item" style="background-color: #0077B5; color: white; padding: 12px 16px; border-radius: 8px; font-size: 12px; flex: 1; min-width: 200px; margin-bottom: 10px;">
                         <strong>LinkedIn:</strong> Professional network with premium internships
                     </div>
-                    <div style="background-color: #2557A7; color: white; padding: 12px 16px; border-radius: 8px; font-size: 12px; flex: 1; min-width: 200px; margin-bottom: 10px;">
+                    <div class="platform-item" style="background-color: #2557A7; color: white; padding: 12px 16px; border-radius: 8px; font-size: 12px; flex: 1; min-width: 200px; margin-bottom: 10px;">
                         <strong>Indeed India:</strong> Largest job portal in India
                     </div>
-                    <div style="background-color: #00A5EC; color: white; padding: 12px 16px; border-radius: 8px; font-size: 12px; flex: 1; min-width: 200px; margin-bottom: 10px;">
+                    <div class="platform-item" style="background-color: #00A5EC; color: white; padding: 12px 16px; border-radius: 8px; font-size: 12px; flex: 1; min-width: 200px; margin-bottom: 10px;">
                         <strong>Internshala:</strong> India's #1 internship platform
                     </div>
-                    <div style="background-color: #7B68EE; color: white; padding: 12px 16px; border-radius: 8px; font-size: 12px; flex: 1; min-width: 200px; margin-bottom: 10px;">
+                    <div class="platform-item" style="background-color: #7B68EE; color: white; padding: 12px 16px; border-radius: 8px; font-size: 12px; flex: 1; min-width: 200px; margin-bottom: 10px;">
                         <strong>Naukri.com:</strong> Leading Indian job site
                     </div>
                 </div>
             </div>
             
             <!-- Footer Tips -->
-            <div style="background-color: #E8F6FF; padding: 25px; margin: 20px;">
+            <div class="tips-section" style="background-color: #E8F6FF; padding: 25px; margin: 20px;">
                 <h3 style="color: #2E86C1; margin: 0 0 15px 0; font-size: 18px;">💡 Application Tips</h3>
                 <ul style="color: #34495E; margin: 0; padding-left: 20px; line-height: 1.6;">
                     <li><strong>Apply Early:</strong> Most internships are filled within 48 hours of posting</li>
@@ -797,7 +883,7 @@ def main():
             </div>
             
             <!-- LinkedIn Tips -->
-            <div style="background-color: #E8F4FD; padding: 25px; margin: 20px; border-left: 4px solid #0077B5;">
+            <div class="tips-section" style="background-color: #E8F4FD; padding: 25px; margin: 20px; border-left: 4px solid #0077B5;">
                 <h3 style="color: #0077B5; margin: 0 0 15px 0; font-size: 18px;">🔗 LinkedIn Pro Tips</h3>
                 <ul style="color: #34495E; margin: 0; padding-left: 20px; line-height: 1.6;">
                     <li><strong>Optimize Profile:</strong> Use internship-relevant keywords in your headline and summary</li>
@@ -808,8 +894,8 @@ def main():
             </div>
             
             <!-- Footer -->
-            <div style="text-align: center; padding: 25px; background-color: #2C3E50; color: white;">
-                <p style="margin: 0; font-size: 13px; opacity: 0.8;">
+            <div class="footer" style="text-align: center; padding: 25px; background-color: #2C3E50; color: white;">
+                <p style="margin: 0; font-size: 13px; opacity: 0.8; line-height: 1.5;">
                     🤖 Automated by GitHub Actions <br>
                     💪 Best of luck with your applications! | Next update in 24 hours
                 </p>
