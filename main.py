@@ -60,12 +60,51 @@ def scrape_linkedin():
     session = requests.Session()
     session.headers.update(headers)
     
-    # Keywords for internship search
+    # Keywords for internship search - All branches
     keywords = [
+        # Computer Science & IT
         "Software Engineer Intern", "Data Science Intern", "Machine Learning Intern",
         "Software Development Intern", "Python Developer Intern", "Full Stack Intern",
         "Backend Developer Intern", "Frontend Developer Intern", "AI Intern",
-        "Web Developer Intern", "Mobile App Developer Intern", "DevOps Intern"
+        "Web Developer Intern", "Mobile App Developer Intern", "DevOps Intern",
+        "Cybersecurity Intern", "Cloud Computing Intern", "Database Intern",
+        
+        # Mechanical Engineering
+        "Mechanical Engineer Intern", "Design Engineer Intern", "CAD Designer Intern",
+        "Manufacturing Engineer Intern", "Production Engineer Intern", "Quality Engineer Intern",
+        "Automotive Engineer Intern", "Robotics Engineer Intern", "HVAC Engineer Intern",
+        
+        # Electrical & Electronics
+        "Electrical Engineer Intern", "Electronics Engineer Intern", "Power Systems Intern",
+        "Control Systems Intern", "Embedded Systems Intern", "VLSI Design Intern",
+        "Hardware Engineer Intern", "Circuit Design Intern", "Instrumentation Intern",
+        
+        # Civil Engineering
+        "Civil Engineer Intern", "Structural Engineer Intern", "Construction Intern",
+        "Site Engineer Intern", "Project Engineer Intern", "Environmental Engineer Intern",
+        "Transportation Engineer Intern", "Water Resources Intern", "Surveying Intern",
+        
+        # Chemical Engineering
+        "Chemical Engineer Intern", "Process Engineer Intern", "Chemical Plant Intern",
+        "Petrochemical Intern", "Pharmaceutical Engineer Intern", "Food Engineer Intern",
+        
+        # Business & Management
+        "Business Analyst Intern", "Marketing Intern", "Sales Intern", "HR Intern",
+        "Finance Intern", "Operations Intern", "Consulting Intern", "Strategy Intern",
+        "Digital Marketing Intern", "Content Marketing Intern", "Brand Management Intern",
+        
+        # Other Engineering Branches
+        "Aerospace Engineer Intern", "Biomedical Engineer Intern", "Industrial Engineer Intern",
+        "Mining Engineer Intern", "Petroleum Engineer Intern", "Marine Engineer Intern",
+        "Agricultural Engineer Intern", "Textile Engineer Intern",
+        
+        # Science & Research
+        "Research Intern", "Lab Intern", "Biotechnology Intern", "Pharmaceutical Intern",
+        "Chemistry Intern", "Physics Intern", "Biology Intern", "Environmental Science Intern",
+        
+        # Design & Creative
+        "Graphic Design Intern", "UI/UX Design Intern", "Product Design Intern",
+        "Architecture Intern", "Interior Design Intern", "Fashion Design Intern"
     ]
     
     # Indian locations
@@ -852,7 +891,6 @@ def main():
             <div class="jobs-container" style="padding: 20px;">
                 {''.join(job_rows)}
             </div>
-       
             
             <!-- Footer Tips -->
             <div class="tips-section" style="background-color: #E8F6FF; padding: 25px; margin: 20px;">
@@ -887,14 +925,11 @@ def main():
                 <div style="margin-top: 10px;">
                     <span style="background-color: rgba(255,255,255,0.1); padding: 3px 8px; border-radius: 10px; font-size: 11px;">Made With ❤️</span>
                 </div>
-               <div style="margin-top: 10px;">
-  <a href="https://randoman.online" target="_blank" style="text-decoration: none;">
-    <span style="background-color: rgba(255,255,255,0.1); padding: 3px 8px; border-radius: 10px; font-size: 11px; color: inherit;">
-      Check Out Our Platform
-    </span>
-  </a>
-</div>
-
+                <div style="margin-top: 10px;">
+                 <a href="https://www.randoman.com" target="_blank" style="text-decoration: none;">
+                    <span style="background-color: rgba(255,255,255,0.1); padding: 3px 8px; border-radius: 10px; font-size: 11px;">Made With ❤️</span>
+                    </a>
+                </div>
             </div>
         </div>
     </body>
