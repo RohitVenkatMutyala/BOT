@@ -887,6 +887,14 @@ def main():
                 <div style="margin-top: 10px;">
                     <span style="background-color: rgba(255,255,255,0.1); padding: 3px 8px; border-radius: 10px; font-size: 11px;">Made With ❤️</span>
                 </div>
+               <div style="margin-top: 10px;">
+  <a href="https://randoman.online" target="_blank" style="text-decoration: none;">
+    <span style="background-color: rgba(255,255,255,0.1); padding: 3px 8px; border-radius: 10px; font-size: 11px; color: inherit;">
+      Check Out Our Platform
+    </span>
+  </a>
+</div>
+
             </div>
         </div>
     </body>
