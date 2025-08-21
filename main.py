@@ -920,14 +920,14 @@ def main():
             <div class="footer" style="text-align: center; padding: 25px; background-color: #2C3E50; color: white;">
                 <p style="margin: 0; font-size: 13px; opacity: 0.8; line-height: 1.5;">
                     🤖 Automated by GitHub Actions <br>
-                    💪 Best of luck with your applications! | Next update in 24 hours
+                    💪 Best of luck with your applications! 
                 </p>
                 <div style="margin-top: 10px;">
                     <span style="background-color: rgba(255,255,255,0.1); padding: 3px 8px; border-radius: 10px; font-size: 11px;">Made With ❤️</span>
                 </div>
                 <div style="margin-top: 10px;">
-                 <a href="https://www.randoman.com" target="_blank" style="text-decoration: none;">
-                    <span style="background-color: rgba(255,255,255,0.1); padding: 3px 8px; border-radius: 10px; font-size: 11px;">Made With ❤️</span>
+                 <a href="https://randoman.online" target="_blank" style="text-decoration: none;">
+                    <span style="background-color: rgba(255, 255, 0, 0.1); padding: 3px 8px; border-radius: 10px; font-size: 11px;">Check _Out_Your_Platform</span>
                     </a>
                 </div>
             </div>
